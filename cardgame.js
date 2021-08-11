@@ -21,7 +21,7 @@ function YouDrawACard() {
 	console.log("------ YOU DRAW ------");
 	console.log(gameDeck);
 	showSuccessMessage("");
-	gameDeck.DrawCard(1);
+	gameDeck.DrawCard();
 }
 
 function YouStay() {
@@ -170,8 +170,9 @@ function CardAPI(request) {
 					gameDeck.game_deck.cards_drawn = 0;
 					showMessage(`DeckID: ${gameDeck.game_deck.deck_id} Cards: ${gameDeck.game_deck.cards_remain}`);
 					if (gameDeck.game_player === 0) CardAPI(1);
+					else if (gameDeck.you_cards.length < 2) CardAPI(1);
 				}
-				else showErrMessage("Game Card Server: success=false");
+				else showErrMessage(`Shuffle: ServerReport: success=${data.success}: Err ${data.error}`);
 			}
 			else {
 				// Request DrawCards
@@ -214,16 +215,13 @@ function CardAPI(request) {
 
 					showMessage(`DeckID: ${gameDeck.game_deck.deck_id} Cards: ${gameDeck.game_deck.cards_remain}`);
 				}
-				else showErrMessage("Game Card Server: success=false");
-
-
+				else showErrMessage(`DrawCard: ServerReport: success=${data.success}: Err ${data.error}`);
 			}
 		})
 		.catch((err) => {
 			// error handeling - some error
-			showErrMessage(`ShuffleCardsErr: ${err}`);
+			showErrMessage(`CardsAPI: ${err}`);
 			console.log(err);
-			console.log(res);
 		});
 
 
@@ -351,11 +349,11 @@ function CardAPI(request) {
 //		});
 //}
 
-const mydeckid = null;
+//const mydeckid = null;
+const mydeckid = "a1v7kugaoewl";
 
 class CardDeck {
 	constructor(decks) {
-//		this.deck_id = null;
 		this.deck_id = mydeckid;
 		this.decks_count = decks;
 		this.cards_count = decks * 52;
@@ -376,7 +374,9 @@ class CardGame {
 		this.game_draw = 0;
 		this.game_player = 0;
 		this.you_cards = [];
+		this.you_wins = 0;
 		this.dealer_cards = [];
+		this.dealer_wins = 0;
 		this.dealer_turn = false;
 	}
 	EndGame() {
@@ -385,11 +385,10 @@ class CardGame {
 		btnNewGame.hidden = false;
 		let dealer = this.GetCardPoints(0);
 		let you = this.GetCardPoints(1);
-		if (you > 21) showErrMessage("You loose");
-		else if (dealer > 21) showErrMessage("You Win");
-		else if (dealer >= you) showErrMessage("Dealer Win");
-		else showErrMessage("You Win");
-		showMessage("Start A New BlackJack Game!");
+		if (you > 21) { gameDeck.dealer_wins++; showErrMessage(`You loose - (You: ${gameDeck.you_wins}   Dealer: ${gameDeck.dealer_wins})`); }
+		else if (dealer > 21) { gameDeck.you_wins++; showErrMessage(`You Win - (You: ${gameDeck.you_wins}   Dealer: ${gameDeck.dealer_wins})`);  }
+		else if (dealer >= you) { gameDeck.dealer_wins++;  showErrMessage(`Dealer Win - (You: ${gameDeck.you_wins}   Dealer: ${gameDeck.dealer_wins})`); }
+		else { gameDeck.you_wins++; showErrMessage(`You Win - (You: ${gameDeck.you_wins}   Dealer: ${gameDeck.dealer_wins})`); }
 	}
 	GetCardPoints(playerid) {
 		// Count points
@@ -444,6 +443,8 @@ class CardGame {
 		btnStay.hidden = false;
 		btnNewGame.hidden = true;
 		showSuccessMessage("");
+		showDealerMessage("");
+		showYouMessage("");
 		let DC = document.querySelector("#DealerCards");
 		while (DC.childNodes.length > 0) {
 			DC.childNodes[0].remove();
@@ -454,12 +455,12 @@ class CardGame {
 		}
 		this.you_cards = [];
 		this.dealer_cards = [];
-		this.game_player = 0;
+		this.game_player = 1;
 		this.dealer_turn = false;
 		console.log(this.game_deck.deck_id);
 		console.log(this.game_deck.cards_remain);
-		if (this.game_deck.cards_remain < 20) this.Shuffle();
-		else this.DrawCard();
+		if (this.game_deck.cards_remain < 20) CardAPI(0);	// shuffle
+		else CardAPI(1);	// draw card
 	}
 	Shuffle() {	CardAPI(0); }
 	DrawCard() { CardAPI(1); }

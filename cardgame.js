@@ -349,8 +349,8 @@ function CardAPI(request) {
 //		});
 //}
 
-//const mydeckid = null;
-const mydeckid = "a1v7kugaoewl";
+const mydeckid = null;
+
 
 class CardDeck {
 	constructor(decks) {

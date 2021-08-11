@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>Card Game</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<nav>
+		<table class="MenuRow">
+			<tr>
+				<td class="MenuItem"><a href="./index.html">Home</a></td>
+				<td class="MenuItem"><a href="./starwars.html">Star Wars</a></td>
+				<td class="MenuItem"><a href="./cardgame.html">Card Game</a></td>
+			</tr>
+
+		</table>
+	</nav>
+	<div class="CardArea">
+		<p id="messageText">Message</p>
+		<table>
+			<tr id="DealerCards">
+				<td><img src="./empty.png" width="80" height="120" /></td>
+			</tr>
+		</table>
+		<p id="DealerMessage">Dealer</p>
+		<table>
+			<tr id="YourCards">
+				<td><img src="./empty.png" width="80" height="120" /></td>
+			</tr>
+		</table>
+		<p id="YouMessage">You</p>
+		<p id="ErrorText" class="ErrorMessage"></p>
+		<p id="SuccessText" class="SuccessMessage"></p>
+		<form>
+			<input type="button" id="DrawButton" value="Draw" />
+			<input type="button" id="StayButton" value="Stay" />
+			<input type="button" id="NewButton" value="NewGame" />
+		</form>
+	</div>
+	<div class="BottomRow">
+		<hr /><p>&copy;2021 WebCo - Contact webmasters@webco.fake.me</p>
+	</div>
+	<script src="./misc.js"></script>
+	<script src="./cardgame.js"></script>
+</body>
+</html>

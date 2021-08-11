@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>StarWars</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<nav>
+		<table class="MenuRow">
+			<tr>
+				<td class="MenuItem"><a href="./index.html">Home</a></td>
+				<td class="MenuItem"><a href="./starwars.html">Star Wars</a></td>
+				<td class="MenuItem"><a href="./cardgame.html">Card Game</a></td>
+			</tr>
+
+		</table>
+	</nav>
+	<div class="InputArea">
+		<p>Search for Star Wars characters using open web api from</p>
+		<p>https://www.swapi.tech/api/people/</p>
+	</div>
+	<div class="InputArea">
+		<form id="submitForm">
+			<input type="button" id="plainTextButton" title="Raw data" value="Raw" />
+			<input type="text" id="searchText" class="InputText" placeholder="Starwars name" autofocus />
+			<input type="button" id="searchButton" title="JSON format" value="Find" />
+		</form>
+	</div>
+	<div class="ResultArea">
+		<p id="messageText">Search result</p>
+		<textarea rows="15" cols="80" id="resultText" class="ResponseMessage"></textarea>
+	</div>
+	<div class="BottomRow">
+		<hr /><p>&copy;2021 WebCo - Contact webmasters@webco.fake.me</p>
+	</div>
+	<script src="./misc.js"></script>
+	<script src="./starwars.js"></script>
+</body>
+</html>

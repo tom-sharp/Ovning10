@@ -1,0 +1,62 @@
+﻿body {
+	background-color: rgb(197 158 158);
+	color: black;
+}
+.MenuRow {
+	background-color: rgb(243 248 203);
+	color: black;
+}
+.MenuItem {
+	width: 80px;
+	height: 20px;
+}
+.InputArea {
+	text-align: center;
+}
+.Exercise {
+	text-align: center;
+	background-color: rgb(226 199 28);
+	color: black;
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+.ResultArea {
+	text-align: center;
+}
+.InputText {
+	background-color: rgb(243 248 203);
+	color: black;
+}
+.ResponseMessage {
+	background-color: rgb(243 248 203);
+	color: black;
+}
+.BottomRow {
+	background-color: rgb(211, 149, 149);
+	color: rgb(109, 107, 97);
+	height: 50px;
+}
+
+.CardArea {
+	background-color: forestgreen;
+	color: black;
+	min-height: 440px;
+	text-align: center;
+	margin-left: 100px;
+	margin-right: 100px;
+}
+.CardItem {
+	text-align: center;
+}
+.StatusMessage {
+}
+.ErrorMessage {
+	background-color: red;
+	color: white;
+}
+.SuccesMessage {
+	background-color: forestgreen;
+	color: white;
+}

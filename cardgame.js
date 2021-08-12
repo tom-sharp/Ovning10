@@ -1,6 +1,9 @@
 ﻿// import CardDeck from './carddeck';
 
 console.log("---------- CardGame.js ------------");
+console.log("Cookie:", document.cookie);
+
+const mydeckid = document.cookie;
 
 const btnNewGame = document.querySelector("#NewButton");
 const btnDraw = document.querySelector("#DrawButton");
@@ -117,6 +120,7 @@ reqBaseUri = "http://deckofcardsapi.com/api/deck/";
 function CardAPI(request) {
 	console.log("-----CardAPI-Request----");
 	console.log("Request: ", request);
+
 	// FORM REQUEST
 	let req = null;
 	switch (request) {
@@ -161,10 +165,13 @@ function CardAPI(request) {
 		.then(res => res.json())
 		.then(data => {
 			console.log("-----CardAPI-Data----");
+			gameDeck.retry_count = 0;
+			showSuccessMessage("");
 			console.log(data);
 			if (request == 0) {
 				// Request Shuffle
 				if (data.success) {
+					if (mydeckid == null) { document.cookie = data.deck_id; }
 					gameDeck.game_deck.deck_id = data.deck_id;
 					gameDeck.game_deck.cards_remain = data.remaining;
 					gameDeck.game_deck.cards_drawn = 0;
@@ -220,8 +227,16 @@ function CardAPI(request) {
 		})
 		.catch((err) => {
 			// error handeling - some error
-			showErrMessage(`CardsAPI: ${err}`);
 			console.log(err);
+			if (gameDeck.retry_count < gameDeck.retry_limit) {
+				gameDeck.retry_count++;
+//				showErrMessage(`CardsAPI: ${err} ReTry ${gameDeck.retry_count}/${gameDeck.retry_limit}`);
+				setTimeout(CardAPI(request), 1000);
+			}
+			else {
+				showErrMessage(`CardsAPI: ${err} Tried ${gameDeck.retry_count} times but could not get a valid response from server`);
+				gameDeck.retry_count = 0;
+			}
 		});
 
 
@@ -349,12 +364,12 @@ function CardAPI(request) {
 //		});
 //}
 
-const mydeckid = null;
 
 
 class CardDeck {
 	constructor(decks) {
-		this.deck_id = mydeckid;
+		if (mydeckid.length > 0) this.deck_id = mydeckid;
+		else this.deck_id = null;
 		this.decks_count = decks;
 		this.cards_count = decks * 52;
 		this.cards_drawn = 0;
@@ -378,6 +393,8 @@ class CardGame {
 		this.dealer_cards = [];
 		this.dealer_wins = 0;
 		this.dealer_turn = false;
+		this.retry_count = 0;
+		this.retry_limit = 3;
 	}
 	EndGame() {
 		btnDraw.hidden = true;
@@ -400,15 +417,11 @@ class CardGame {
 			while (i1 < gameDeck.you_cards.length) { if (gameDeck.you_cards[i1] == 1) aces++; sum += gameDeck.you_cards[i1++]; }
 		}
 		if (aces > 0) {
-			if (aces == 1) {
-				sum2 = sum + 10;
-				if ((sum2 <= 21) && (sum2 > sum)) sum = sum2;
-			}
+			sum2 = sum + 10;
+			if (sum2 <= 21) sum = sum2;
 			if (aces >= 2) {
-				sum2 = sum + 10;
-				if ((sum2 <= 21) && (sum2 > sum)) sum = sum2;
 				sum2 = sum + 20;
-				if ((sum2 <= 21) && (sum2 > sum)) sum = sum2;
+				if (sum2 <= 21) sum = sum2;
 			}
 		}
 		return sum;
@@ -438,6 +451,7 @@ class CardGame {
 	}
 	NewRound() {
 		console.log("-------------- NEW ROUND --------")
+		console.log("Cookie:", document.cookie);
 		let i1 = 0;
 		btnDraw.hidden = false;
 		btnStay.hidden = false;
